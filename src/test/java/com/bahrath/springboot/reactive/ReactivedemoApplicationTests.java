@@ -1,8 +1,13 @@
 package com.bahrath.springboot.reactive;
 
+import com.bahrath.springboot.reactive.vaccine.OrderConsumer;
+import com.bahrath.springboot.reactive.vaccine.Product;
+import com.bahrath.springboot.reactive.vaccine.Vaccine;
+import com.bahrath.springboot.reactive.vaccine.VaccineProvider;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,10 +18,18 @@ import java.util.Arrays;
 @SpringBootTest
 class ReactivedemoApplicationTests {
 
+	@Autowired
+	VaccineProvider provider;
+
+	@Test
+	void testVaccineProvider() {
+		provider.provideVaccines().subscribe(new VaccineConsumer());
+	}
+
 	@Test
 	void testMono() {
-		Mono<String> mono = Mono.just("Mackbook Pro");
-		mono.log().map(data -> data.toUpperCase())
+		Mono<Product> mono = Mono.just(new Product("Mackbook Pro"));
+		mono.log().map(data -> data.getName().toUpperCase())
 				.subscribe(System.out::println);;
 	}
 

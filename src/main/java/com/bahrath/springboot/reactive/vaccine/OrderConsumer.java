@@ -1,4 +1,4 @@
-package com.bahrath.springboot.reactive;
+package com.bahrath.springboot.reactive.vaccine;
 
 import java.util.function.Consumer;
 
