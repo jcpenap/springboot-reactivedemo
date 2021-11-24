@@ -5,6 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Arrays;
+
 @SpringBootTest
 class ReactivedemoApplicationTests {
 
@@ -21,6 +24,17 @@ class ReactivedemoApplicationTests {
 				.log()
 				.map(data -> data.toUpperCase())
 				.subscribe(new OrderConsumer());
+	}
+
+	@Test
+	void testFluxFromIterable() throws InterruptedException {
+		Flux.fromIterable(Arrays.asList("Mackbook Pro", "Iphone", "Dell"))
+				.delayElements(Duration.ofSeconds(2))
+				.log()
+				.map(data -> data.toUpperCase())
+				.subscribe(new OrderConsumer());
+
+		Thread.sleep(7000);
 	}
 
 }
