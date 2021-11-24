@@ -12,7 +12,7 @@ class ReactivedemoApplicationTests {
 	void testMono() {
 		Mono<String> mono = Mono.just("Mackbook Pro");
 		mono.log().map(data -> data.toUpperCase())
-				.subscribe(data -> System.out.println(data));
+				.subscribe(System.out::println);;
 	}
 
 	@Test
@@ -20,7 +20,7 @@ class ReactivedemoApplicationTests {
 		Flux.just("Mackbook Pro", "Iphone", "Dell")
 				.log()
 				.map(data -> data.toUpperCase())
-				.subscribe(data -> System.out.println(data));
+				.subscribe(new OrderConsumer());
 	}
 
 }
