@@ -41,18 +41,28 @@ class ReactivedemoApplicationTests {
 
 	@Test
 	void testFluxWithSubscriber() throws InterruptedException {
-		Flux.fromIterable(Arrays.asList("Mackbook Pro", "Iphone", "Dell"))
-				.delayElements(Duration.ofSeconds(2))
+		Flux.fromIterable(Arrays.asList("Mackbook Pro", "Iphone", "Dell","Mackbook Pro", "Iphone", "Dell","Mackbook Pro", "Iphone", "Dell"))
+				//.delayElements(Duration.ofSeconds(2))
 				.log()
 				.map(data -> data.toUpperCase())
 				.subscribe(new Subscriber<String>() {
+
+					private long count = 0;
+					private Subscription subscription;
+
 					@Override
 					public void onSubscribe(Subscription subscription) {
-						subscription.request(Long.MAX_VALUE);
+						this.subscription = subscription;
+						subscription.request(3);
 					}
 
 					@Override
 					public void onNext(String order) {
+						count++;
+						if (count >= 3) {
+							count = 0;
+							subscription.request(3);
+						}
 						System.out.println(order);
 					}
 
