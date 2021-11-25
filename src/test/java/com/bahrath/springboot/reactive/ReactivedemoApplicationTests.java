@@ -11,15 +11,56 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class ReactivedemoApplicationTests {
 
 	@Autowired
 	VaccineProvider provider;
+
+	@Test
+	void testVaccineProvider_reactive() {
+		StepVerifier.create(provider.provideVaccines())
+				.expectSubscription()
+				.expectNext(Vaccine.builder().name("Pfizer").build())
+				.expectNext(Vaccine.builder().name("J&J").build())
+				.expectNext(Vaccine.builder().name("Covaxin").build())
+				.expectComplete()
+				.verify();
+	}
+
+	@Test
+	void testVaccineProvider_reactive_expectNextCount() {
+		StepVerifier.create(provider.provideVaccines())
+				.expectSubscription()
+				.expectNextCount(3)
+				.expectComplete()
+				.verify();
+	}
+
+	@Test
+	void testVaccineProvider_reactive_assertThat() {
+		StepVerifier.create(provider.provideVaccines())
+				.expectSubscription()
+				.assertNext(vaccine -> {
+					assertThat(vaccine.getName()).isNotNull();
+					assertTrue(vaccine.isDelivered());
+					assertEquals("Pfizer", vaccine.getName());
+				})
+				.expectNext(Vaccine.builder().name("J&J").build())
+				.expectNext(Vaccine.builder().name("Covaxin").build())
+				.expectComplete()
+				.verify();
+	}
+
 
 	@Test
 	void testVaccineProvider() {
