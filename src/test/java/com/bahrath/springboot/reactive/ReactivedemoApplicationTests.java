@@ -61,6 +61,40 @@ class ReactivedemoApplicationTests {
 				.verify();
 	}
 
+	@Test
+	void testVaccineProvider_reactive_expectNextMatches() {
+		StepVerifier.create(provider.provideVaccines())
+				.expectSubscription()
+				.expectNextMatches(vaccine -> {
+					assertThat(vaccine.getName()).isNotNull();
+					assertTrue(vaccine.isDelivered());
+					assertEquals("Pfizer", vaccine.getName());
+					return true;
+				})
+				.expectNext(Vaccine.builder().name("J&J").build())
+				.expectNext(Vaccine.builder().name("Covaxin").build())
+				.expectComplete()
+				.verify();
+	}
+
+	@Test
+	void testVaccineProvider_reactive_thenConsumeWhile() {
+		StepVerifier.create(provider.provideVaccines())
+				.expectSubscription()
+				.expectNextMatches(vaccine -> {
+					assertThat(vaccine.getName()).isNotNull();
+					assertTrue(vaccine.isDelivered());
+					assertEquals("Pfizer", vaccine.getName());
+					return true;
+				})
+				.thenConsumeWhile(vaccine -> {
+					System.out.println("Vaccine name while consuming: "+vaccine.getName());
+					return true;
+				})
+				.expectComplete()
+				.verify();
+	}
+
 
 	@Test
 	void testVaccineProvider() {
