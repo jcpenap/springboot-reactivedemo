@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 @Service
 public class VaccineService {
 
-    public Flux<Vaccine> getVeccines() {
+    public Flux<Vaccine> getVaccines() {
 
         return Flux.just(Vaccine.builder().name("Pfizer").build(),
                 Vaccine.builder().name("J&J").build(),

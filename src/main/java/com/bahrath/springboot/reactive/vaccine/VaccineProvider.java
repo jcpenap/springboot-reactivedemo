@@ -11,7 +11,7 @@ public class VaccineProvider {
     private VaccineService service;
 
     public Flux<Vaccine> provideVaccines() {
-        return service.getVeccines().map(this::deliver);
+        return service.getVaccines().map(this::deliver);
     }
 
     private Vaccine deliver(Vaccine vaccine) {
